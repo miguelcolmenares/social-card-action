@@ -1,0 +1,17 @@
+name: Verify release (temporary)
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: card
+        uses: miguelcolmenares/social-card@v0.1.0
+        with:
+          path: consumed/social.png
+          accent: "#f97316"
+      - run: |
+          test "${{ steps.card.outputs.changed }}" = "true"
+          test "$(head -c 8 consumed/social.png | od -An -tx1 | tr -d ' \n')" = "89504e470d0a1a0a"
