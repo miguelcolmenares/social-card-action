@@ -1,6 +1,6 @@
 # Third-party notices
 
-social-card is MIT licensed. The action installs these packages from the public npm registry when it runs. They are not copied into
+social-card-action is MIT licensed. The action installs these packages from the public npm registry when it runs. They are not copied into
 this repository, and each keeps its own license.
 
 | Package                                                         | License | Used for                   |

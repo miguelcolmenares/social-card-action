@@ -12,7 +12,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Version of social-card
+      label: Version of social-card-action
       placeholder: "v0.1.0"
     validations:
       required: true

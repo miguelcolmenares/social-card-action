@@ -1,5 +1,5 @@
 name: Feature request
-description: Something social-card should do, or an input it should have.
+description: Something social-card-action should do, or an input it should have.
 labels: [enhancement]
 body:
   - type: textarea

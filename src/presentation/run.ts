@@ -35,7 +35,7 @@ export async function run(
   }
   const parsed = parseRequest(inputs as RequestEnv);
   if (!parsed.ok) {
-    log(`::error title=social-card::${parsed.error}`);
+    log(`::error title=social-card-action::${parsed.error}`);
     return 1;
   }
   try {
@@ -48,7 +48,9 @@ export async function run(
     }
     return 0;
   } catch (error) {
-    log(`::error title=social-card::${error instanceof Error ? error.message : String(error)}`);
+    log(
+      `::error title=social-card-action::${error instanceof Error ? error.message : String(error)}`,
+    );
     return 1;
   }
 }

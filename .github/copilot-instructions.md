@@ -1,4 +1,4 @@
-# Copilot repository instructions: social-card
+# Copilot repository instructions: social-card-action
 
 These instructions apply to every Copilot request in this repository. The full context is in [`AGENTS.md`](../AGENTS.md); read it
 before non-trivial work.

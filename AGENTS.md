@@ -4,7 +4,7 @@ Context for any AI agent working in this repository.
 
 ## What this is
 
-`social-card`: a composite GitHub Action that draws a 1200 by 630 PNG social card from a project's name and description, in the
+`social-card-action`: a composite GitHub Action that draws a 1200 by 630 PNG social card from a project's name and description, in the
 dark style of docs-sitekit. MIT, written from scratch. Do not add code, text or configuration copied from other projects, and do
 not depend on private packages. It exists so that docs-sitekit sites (and any repository) get a social image without adding
 image dependencies to a site: the 40 MB of `satori`, `resvg` and Geist live here, in the runner of the action.

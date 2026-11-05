@@ -7,8 +7,8 @@ Thanks for helping. This is a small action with strict checks, so most of the wo
 You need Node 22.18 or newer, which runs the TypeScript sources without a build step.
 
 ```bash
-git clone https://github.com/miguelcolmenares/social-card.git
-cd social-card
+git clone https://github.com/miguelcolmenares/social-card-action.git
+cd social-card-action
 npm ci
 npm test
 ```

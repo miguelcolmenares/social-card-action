@@ -74,7 +74,7 @@ describe("run", () => {
     const lines: string[] = [];
     const code = await run(env({ SOCIAL_CARD_PATH: "../escape.png" }), (line) => lines.push(line));
     assert.equal(code, 1);
-    assert.match(lines.join("\n"), /^::error title=social-card::.*leaves the repository/);
+    assert.match(lines.join("\n"), /^::error title=social-card-action::.*leaves the repository/);
     assert.throws(() => readFileSync(join(workspace, "../escape.png")));
   });
 
