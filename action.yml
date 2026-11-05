@@ -1,0 +1,89 @@
+name: "social-card"
+description: "Draw a 1200 by 630 social card PNG for a project, from its name and description, in the dark style of docs-sitekit."
+author: "Miguel Colmenares"
+
+branding:
+  icon: "image"
+  color: "blue"
+
+inputs:
+  path:
+    description: >-
+      Where the PNG is written, relative to the repository root. Use a file of the `public/` folder of a docs-sitekit
+      site for `site.image`, or any other path for the social preview of the repository.
+    required: false
+    default: "public/social.png"
+  name:
+    description: "The big text of the card. The name of the repository unless you set it."
+    required: false
+    default: ${{ github.event.repository.name }}
+  description:
+    description: "The text under the name, cut at a word after about 150 characters. The description of the repository unless you set it."
+    required: false
+    default: ${{ github.event.repository.description }}
+  host:
+    description: "The text at the foot of the card. Without it, the host of the homepage of the repository, or github.com/owner/repo."
+    required: false
+    default: ""
+  background:
+    description: "Background color, such as #09090b."
+    required: false
+    default: ""
+  title:
+    description: "Color of the name."
+    required: false
+    default: ""
+  text:
+    description: "Color of the description."
+    required: false
+    default: ""
+  muted:
+    description: "Color of the host at the foot."
+    required: false
+    default: ""
+  accent:
+    description: "Color of the bar and of the mark."
+    required: false
+    default: ""
+  node-version:
+    description: "Node.js version that runs the action. It needs 22.18 or newer."
+    required: false
+    default: "24"
+
+outputs:
+  path:
+    description: "Path of the card, relative to the repository root."
+    value: ${{ steps.draw.outputs.path }}
+  changed:
+    description: "true when the file is new or different from the one that was there, false when it is the same."
+    value: ${{ steps.draw.outputs.changed }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node ${{ inputs.node-version }}
+      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install the dependencies of the action
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+
+    - id: draw
+      name: Draw the card
+      shell: bash
+      env:
+        SOCIAL_CARD_PATH: ${{ inputs.path }}
+        SOCIAL_CARD_NAME: ${{ inputs.name }}
+        SOCIAL_CARD_DESCRIPTION: ${{ inputs.description }}
+        SOCIAL_CARD_HOST: ${{ inputs.host }}
+        SOCIAL_CARD_HOMEPAGE: ${{ github.event.repository.homepage }}
+        SOCIAL_CARD_REPOSITORY: ${{ github.repository }}
+        SOCIAL_CARD_BACKGROUND: ${{ inputs.background }}
+        SOCIAL_CARD_TITLE: ${{ inputs.title }}
+        SOCIAL_CARD_TEXT: ${{ inputs.text }}
+        SOCIAL_CARD_MUTED: ${{ inputs.muted }}
+        SOCIAL_CARD_ACCENT: ${{ inputs.accent }}
+      run: node "$GITHUB_ACTION_PATH/src/cli.ts"

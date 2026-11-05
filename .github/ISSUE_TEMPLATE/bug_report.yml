@@ -1,0 +1,25 @@
+name: Bug report
+description: The action fails, or the card it draws is wrong.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you set, what you expected and what you got. Paste the step of your workflow and its log.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version of social-card
+      placeholder: "v0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: runner
+    attributes:
+      label: Runner
+      placeholder: "ubuntu-latest"
+    validations:
+      required: true

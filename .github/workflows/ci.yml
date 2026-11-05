@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22 is the oldest the action supports: it runs the TypeScript sources with Node's own type stripping, from 22.18.
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+
+  tsdoc:
+    name: TSDoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Complete, not only valid: every export of our own code has a comment.
+      - uses: miguelcolmenares/jsdoc-to-tsdoc@78f159f0774ab8d1532c8b14437676dd34d36f6c # v1.0.0
+        with:
+          command: check
+          version: "1.0.0"
+          node-version: "26"
+          exclude: "**/__tests__/**"
+
+  # The composite action, run for real: it draws a card, a second run finds the same bytes and reports no change,
+  # and a path that leaves the repository fails the step.
+  action:
+    name: Action smoke test
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: first
+        uses: ./
+        with:
+          path: smoke/social.png
+      - id: second
+        uses: ./
+        with:
+          path: smoke/social.png
+      - id: escape
+        continue-on-error: true
+        uses: ./
+        with:
+          path: ../escape.png
+      - name: The action drew the card, once, and refused the path outside the repository
+        env:
+          FIRST: ${{ steps.first.outputs.changed }}
+          SECOND: ${{ steps.second.outputs.changed }}
+          PATH_OUT: ${{ steps.first.outputs.path }}
+          ESCAPE: ${{ steps.escape.outcome }}
+        run: |
+          test "$FIRST" = "true"
+          test "$SECOND" = "false"
+          test "$PATH_OUT" = "smoke/social.png"
+          test "$ESCAPE" = "failure"
+          test "$(head -c 8 smoke/social.png | od -An -tx1 | tr -d ' \n')" = "89504e470d0a1a0a"
+          test ! -e ../escape.png

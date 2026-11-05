@@ -1,0 +1,57 @@
+name: Release
+
+# A tag `vX.Y.Z` makes the release. There is no package to publish: a workflow uses this action by its tag, or by
+# the commit of the tag. The tag must match the version in package.json, and the checks pass before the Release is made.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+          cache: npm
+      - name: Tag must match package.json
+        run: |
+          expected="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$expected" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json ($expected)"; exit 1
+          fi
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+  # The GitHub Release is made after the checks, in its own job, so that only this one can write to the repository.
+  # The notes are the section of the CHANGELOG for the tag.
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Create the GitHub Release from the CHANGELOG
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::notice::The release $TAG already exists, so there is nothing to create."
+            exit 0
+          fi
+          version="${TAG#v}"
+          awk -v v="$version" '/^## \[/ { p = (index($0, "[" v "]") == 4); next } p' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no section for $version"; exit 1
+          fi
+          flags=""
+          case "$version" in *-*) flags="--prerelease" ;; esac
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file notes.md $flags

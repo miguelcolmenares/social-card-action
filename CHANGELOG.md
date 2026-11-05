@@ -1,0 +1,18 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0] - 2026-11-05
+
+### Added
+
+- **A GitHub Action that draws the social card of a project.** A 1200 by 630 PNG with the name, the description and the host, in the
+  dark style of docs-sitekit, written at `path` (`public/social.png` by default). The name, the description and the host default to
+  those of the repository, and the five colors can be set. The output `changed` says whether the file is new or different, so a
+  workflow commits only when there is something to commit. A path outside the repository, a path that is not a PNG and a color that
+  is not hex fail the step with a message.
