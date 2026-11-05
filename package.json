@@ -1,6 +1,6 @@
 {
   "name": "social-card",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "GitHub Action that draws a 1200 by 630 social card PNG for a project, from its name and description.",
   "type": "module",

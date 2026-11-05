@@ -13,7 +13,7 @@ Use the picture for the link preview of a documentation site (`og:image`), or up
 ```yaml
 - uses: actions/checkout@v7
 - id: card
-  uses: miguelcolmenares/social-card@v0.1.0
+  uses: miguelcolmenares/social-card@v0.1.1
   with:
     path: public/social.png
 ```
@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - id: card
-        uses: miguelcolmenares/social-card@v0.1.0
+        uses: miguelcolmenares/social-card@v0.1.1
         with:
           path: site/public/social.png
       - if: steps.card.outputs.changed == 'true'
@@ -85,7 +85,7 @@ Draw the card into the `public/` folder of the site, and name it with `site.imag
 ```
 
 ```yaml
-- uses: miguelcolmenares/social-card@v0.1.0
+- uses: miguelcolmenares/social-card@v0.1.1
   with:
     path: site/public/social.png
 ```
