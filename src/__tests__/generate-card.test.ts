@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { generateCard } from "../application/index.ts";
-import type { CardRenderer, FileStore } from "../application/index.ts";
-import { DEFAULT_COLORS } from "../domain/index.ts";
+import { generateCard } from "@/application";
+import type { CardRenderer, FileStore } from "@/application";
+import { DEFAULT_COLORS } from "@/domain";
 
 const request = {
   path: "public/social.png",

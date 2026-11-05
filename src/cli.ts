@@ -1,3 +1,3 @@
-import { run } from "./presentation/index.ts";
+import { run } from "@/presentation";
 
 process.exitCode = await run(process.env);

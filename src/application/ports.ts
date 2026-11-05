@@ -1,4 +1,4 @@
-import type { CardInput } from "../domain/index.ts";
+import type { CardInput } from "@/domain";
 
 /** Draws a card as the bytes of a PNG. */
 export interface CardRenderer {

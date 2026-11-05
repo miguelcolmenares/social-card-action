@@ -2,14 +2,8 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
-import {
-  CARD_HEIGHT,
-  CARD_WIDTH,
-  DESCRIPTION_LIMIT,
-  NAME_LIMIT,
-  truncateAtWord,
-} from "../domain/index.ts";
-import type { CardInput } from "../domain/index.ts";
+import { CARD_HEIGHT, CARD_WIDTH, DESCRIPTION_LIMIT, NAME_LIMIT, truncateAtWord } from "@/domain";
+import type { CardInput } from "@/domain";
 
 /**
  * The fonts of the card. Satori reads TTF, OTF or WOFF, not WOFF2, so the static `.woff` files of the Latin subset

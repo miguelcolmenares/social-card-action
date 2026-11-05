@@ -7,7 +7,7 @@ import {
   outputPathProblem,
   parseRequest,
   truncateAtWord,
-} from "../domain/index.ts";
+} from "@/domain";
 
 describe("truncateAtWord", () => {
   it("returns a text that fits, with its spaces collapsed", () => {

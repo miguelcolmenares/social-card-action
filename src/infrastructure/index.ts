@@ -1,2 +1,2 @@
-export * from "./nodeFiles.ts";
-export * from "./renderCard.ts";
+export * from "./node-files.ts";
+export * from "./render-card.ts";

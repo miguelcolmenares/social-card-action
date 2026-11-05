@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { FileStore } from "../application/index.ts";
+import type { FileStore } from "@/application";
 
 /**
  * The files under a root folder, which is the workspace of the job.

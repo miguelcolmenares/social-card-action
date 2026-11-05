@@ -86,4 +86,4 @@ runs:
         SOCIAL_CARD_TEXT: ${{ inputs.text }}
         SOCIAL_CARD_MUTED: ${{ inputs.muted }}
         SOCIAL_CARD_ACCENT: ${{ inputs.accent }}
-      run: node "$GITHUB_ACTION_PATH/src/cli.ts"
+      run: node --import "$GITHUB_ACTION_PATH/src/register-alias.mjs" "$GITHUB_ACTION_PATH/src/cli.ts"

@@ -12,22 +12,26 @@ image dependencies to a site: the 40 MB of `satori`, `resvg` and Geist live here
 ## Layout (Domain-Driven Design, barrel exports)
 
 ```text
-action.yml                the composite action: setup-node, npm ci --omit=dev in the action folder, node src/cli.ts
+action.yml                the composite action: setup-node, npm ci --omit=dev in the action folder, node --import src/register-alias.mjs src/cli.ts
 src/
   domain/                 pure rules: the card input and colors, truncateAtWord, the request parsed from the inputs
   application/            generateCard (draw, compare with the file there, write only on change) and its ports
   infrastructure/         adapters: satori and resvg (renderCard), node:fs (nodeFiles)
   presentation/           run(): reads SOCIAL_CARD_* variables, writes the outputs; cli.ts is the entry point
+  register-alias.mjs      resolves the `@/` alias at run time, loaded with `node --import`
   __tests__/              node:test, one file per layer
 docs/example.png          the card of this repository, shown in the README
 ```
 
-Dependencies point inward. Every layer has an `index.ts`, and other layers import it, not its files.
+Dependencies point inward. Every layer has an `index.ts`, and other layers import it, not its files: `import { parseRequest } from "@/domain"`.
 
 ## Rules learned the hard way
 
 - **No build step.** The action runs the TypeScript with Node's own type stripping (22.18 and newer). So: no enums, no namespaces,
-  no parameter properties (`erasableSyntaxOnly`), and every relative import ends in `.ts`. Do not add a bundler or a `dist/`.
+  no parameter properties (`erasableSyntaxOnly`), and a sibling import (`./card.ts`) ends in `.ts`. Do not add a bundler or a `dist/`.
+- **Names and imports.** File and folder names are lowercase kebab-case (`generate-card.ts`), and only the names of exports are CamelCase.
+  An import that leaves its folder is `@/domain`, the `src/` folder, through the barrel. Node does not read the `paths` of tsconfig, so
+  `src/register-alias.mjs` resolves `@/` at run time. The action, `npm test` and any script load it with `node --import ./src/register-alias.mjs`.
 - **An input never reaches a shell.** `action.yml` passes every input as an environment variable, `SOCIAL_CARD_<INPUT>`, and the
   script reads them from `process.env`. Never interpolate `${{ inputs.* }}` into a `run:` line.
 - **The action writes only inside the workspace.** `outputPathProblem` refuses an absolute path, `..` and a name that is not `.png`.

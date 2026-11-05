@@ -1,2 +1,2 @@
-export * from "./generateCard.ts";
+export * from "./generate-card.ts";
 export * from "./ports.ts";

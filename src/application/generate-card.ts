@@ -1,4 +1,4 @@
-import type { Request } from "../domain/index.ts";
+import type { Request } from "@/domain";
 import type { CardRenderer, FileStore } from "./ports.ts";
 
 /** What a run did: where the card is, and whether the file is new or different from the one that was there. */

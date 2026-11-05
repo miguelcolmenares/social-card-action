@@ -23,6 +23,7 @@ export has a TSDoc comment, and runs the action itself on a runner.
 - **A test at the right level.** Rules get unit tests, the use case gets a test with in-memory files, and the run as a whole gets a
   test that draws a real PNG in a temporary folder.
 - **`action.yml` and the README agree.** A new input or output is in both, with the same default.
+- **File names are kebab-case**, only the names of exports are CamelCase, and an import that leaves its folder is `@/domain`.
 - **No code copied from elsewhere**, and no dependency on a private package.
 
 ## Commits and pull requests

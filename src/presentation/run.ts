@@ -1,8 +1,8 @@
 import { appendFileSync } from "node:fs";
-import { generateCard } from "../application/index.ts";
-import { parseRequest } from "../domain/index.ts";
-import type { RequestEnv } from "../domain/index.ts";
-import { nodeFiles, renderCard } from "../infrastructure/index.ts";
+import { generateCard } from "@/application";
+import { parseRequest } from "@/domain";
+import type { RequestEnv } from "@/domain";
+import { nodeFiles, renderCard } from "@/infrastructure";
 
 /**
  * Runs the action: reads the inputs from the environment, draws the card, writes it, and reports `path` and `changed`

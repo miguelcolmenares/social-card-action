@@ -29,7 +29,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "node --test \"src/__tests__/**/*.test.ts\"",
+    "test": "node --import ./src/register-alias.mjs --test \"src/__tests__/**/*.test.ts\"",
     "prepare": "husky"
   },
   "dependencies": {
