@@ -57,6 +57,9 @@ describe("outputPathProblem", () => {
     "../social.png",
     "a/../../social.png",
     "social.jpg",
+    "a.png\nchanged=true\n.png",
+    "a\r.png",
+    "a\u0000.png",
     "social",
   ]) {
     it(`refuses "${bad}", and says why`, () => assert.match(outputPathProblem(bad) ?? "", /\S/));

@@ -22,16 +22,19 @@ const COLOR_INPUTS = ["background", "title", "text", "muted", "accent"] as const
  * @returns A sentence for the person who wrote the workflow, or undefined.
  */
 export function outputPathProblem(path: string): string | undefined {
+  // A line break would let the path write other lines into the outputs file and the log.
+  if (Array.from(path).some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127))
+    return "The path has a control character in it. Use a plain file name.";
   if (path === "" || path.endsWith("/"))
-    return `"${path}" is not a file. Name the file, such as public/social.png.`;
+    return "The path is not a file. Name the file, such as public/social.png.";
   if (path.startsWith("/") || /^[a-z]:[\\/]/i.test(path) || path.startsWith("\\")) {
-    return `"${path}" is an absolute path. Use a path relative to the repository, such as public/social.png.`;
+    return "The path is absolute. Use a path relative to the repository, such as public/social.png.";
   }
   if (path.split(/[\\/]/).some((part) => part === "..")) {
-    return `"${path}" leaves the repository. Use a path inside it, such as public/social.png.`;
+    return "The path leaves the repository. Use a path inside it, such as public/social.png.";
   }
   if (!/\.png$/i.test(path))
-    return `"${path}" is not a PNG. The card is written as a PNG, so the name ends in .png.`;
+    return "The path is not a PNG. The card is written as a PNG, so the name ends in .png.";
   return undefined;
 }
 
@@ -81,7 +84,7 @@ export function parseRequest(env: RequestEnv): ParsedRequest {
     if (!isHexColor(value))
       return {
         ok: false,
-        error: `The ${key} color "${value}" is not a hex color such as #4fc1ff.`,
+        error: `The ${key} color is not a hex color such as #4fc1ff.`,
       };
     colors[key] = value;
   }

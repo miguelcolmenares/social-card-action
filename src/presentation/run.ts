@@ -41,7 +41,8 @@ export async function run(
   try {
     const files = nodeFiles(env.GITHUB_WORKSPACE || process.cwd());
     const result = await generateCard({ renderer: { render: renderCard }, files }, parsed.request);
-    log(result.changed ? `Wrote ${result.path}.` : `${result.path} is already up to date.`);
+    // The path is an input of the workflow, so it is reported as the `path` output and not repeated in the log.
+    log(result.changed ? "Wrote the social card." : "The social card is already up to date.");
     if (env.GITHUB_OUTPUT) {
       appendFileSync(env.GITHUB_OUTPUT, `path=${result.path}\nchanged=${result.changed}\n`);
     }
