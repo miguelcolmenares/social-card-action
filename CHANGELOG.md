@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **`minimatch` is 11.0.5 in the development dependencies.** Versions 7.0.0 to 11.0.0 allow a denial of service through glob parts amplification (GHSA-g3hv-75wg-m249, patched in 11.0.1). An `overrides` entry in `package.json` moves the 10.x and 9.x copies that `eslint`, `glob` and the test tooling pull in to 11.0.5. It is a development dependency only, so the shipped package does not change.
+
 ## [0.1.0] - 2026-11-05
 
 ### Added
