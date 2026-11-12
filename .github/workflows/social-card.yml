@@ -1,0 +1,48 @@
+name: Social card
+
+# Draws the card of this repository again (docs/example.png, shown in the README) and opens a pull request when the picture
+# changed, for example after the description of the repository was edited. It runs by hand.
+#
+# `main` is protected by a ruleset that requires a pull request and has no bypass, so the card goes in with mode pr:
+# npm-auto-build pushes it to the branch auto-build/main and keeps one pull request up to date. It needs one of two things in
+# the repository, and neither is set by this file:
+#   - the setting "Allow GitHub Actions to create and approve pull requests" (Settings, Actions, General), or
+#   - a secret SOCIAL_CARD_TOKEN, a personal access token with Contents and Pull requests set to read and write. A pull request
+#     made with the default token does not start the required checks, so a token of this kind is the one that lets it merge.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: social-card-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  card:
+    name: Draw the card
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the push of the bot branch
+      pull-requests: write # open and update the pull request
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # the install and the build cannot read a token from .git/config
+      # This repository, as the action: the same step the README shows.
+      - uses: ./
+        with:
+          path: docs/example.png
+      # npm-auto-build runs a script of package.json before it commits. This repository has no build step, so the script is
+      # `typecheck`, a quick gate. `ignore-scripts` keeps husky (the `prepare` script) from touching the git config.
+      # npm-auto-build has no v3 release yet: this is the commit of its main branch.
+      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+        with:
+          mode: pr
+          command: typecheck
+          paths: docs/example.png
+          ignore-scripts: true
+          pr-title: "Update the social card"
+          commit-message: "Update the social card"
+          token: ${{ secrets.SOCIAL_CARD_TOKEN || github.token }}

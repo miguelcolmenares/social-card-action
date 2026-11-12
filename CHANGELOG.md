@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **The README commits the card with npm-auto-build.** The hand-written `git commit` step is replaced by `mode: commit`, with `mode: pr` for a protected branch, and `paths: site/public/social.png`. The repository has the same flow in `.github/workflows/social-card.yml`, run by hand, which opens a pull request when the card of the repository changed. npm-auto-build has no v3 release yet, so both pin the commit of its `main` branch.
+
 ### Security
 
 - **`minimatch` is 11.0.5 in the development dependencies.** Versions 7.0.0 to 11.0.0 allow a denial of service through glob parts amplification (GHSA-g3hv-75wg-m249, patched in 11.0.1). An `overrides` entry in `package.json` moves the 10.x and 9.x copies that `eslint`, `glob` and the test tooling pull in to 11.0.5. It is a development dependency only, so the shipped package does not change.

@@ -44,8 +44,20 @@ only on change makes no empty commits.
 
 ## Keep the card up to date
 
-The action writes the file and does not commit it, so you choose what happens to it. This workflow commits the card when you run it
-by hand, and only if the picture changed, for example after you edit the description of the repository.
+The action writes the file and does not commit it, so you choose what happens to it. For the commit, use
+[npm-auto-build](https://github.com/miguelcolmenares/npm-auto-build), the action that commits a build output only when it changed.
+Draw the card first, then give the file to npm-auto-build as `paths`. When the card did not change, nothing is committed.
+
+npm-auto-build installs your dependencies and runs a script of your `package.json` before it commits, `build` unless you set
+`command`. So this needs a repository with a `package.json` and that script. The script runs after the card is drawn, and only the
+`paths` are committed, so a build of a site can read the card, and a quick script such as `typecheck` works too.
+
+npm-auto-build has no v3 release yet, so the examples pin the commit of its `main` branch by full SHA, which is also what its
+documentation advises for a workflow with a write token. After the release, replace the SHA with `@v3` or with the commit of the
+tag.
+
+This workflow commits the card to the branch when you run it by hand, for example after you edit the description of the
+repository. Mode `commit` pushes to the branch, so use it only on a branch that accepts pushes from the workflow.
 
 ```yaml
 name: Social card
@@ -54,27 +66,73 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: social-card-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   card:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # the push of the card
     steps:
       - uses: actions/checkout@v7
-      - id: card
-        uses: miguelcolmenares/social-card-action@v0.1.0
+        with:
+          persist-credentials: false # the build cannot read a token from .git/config
+      - uses: miguelcolmenares/social-card-action@v0.1.0
         with:
           path: site/public/social.png
-      - if: steps.card.outputs.changed == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site/public/social.png
-          git commit -m "Update the social card"
-          git push
+      # npm-auto-build has no v3 release yet, so this is the commit of its main branch.
+      # After the release, use the commit of the v3 tag, or @v3.
+      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+        with:
+          mode: commit
+          paths: site/public/social.png
+          commit-message: "Update the social card [skip ci]"
 ```
 
-A repository that protects `main` needs a pull request instead of the push: open one with the file that changed.
+A repository that protects `main` does not accept the push. Use `mode: pr` instead: the action puts the card on its own branch,
+`auto-build/main`, and keeps one pull request up to date. A person merges it.
+
+```yaml
+name: Social card
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: social-card-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  card:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # the push of the bot branch
+      pull-requests: write # open and update the pull request
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: miguelcolmenares/social-card-action@v0.1.0
+        with:
+          path: site/public/social.png
+      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+        with:
+          mode: pr
+          paths: site/public/social.png
+          pr-title: "Update the social card"
+          commit-message: "Update the social card"
+```
+
+With the default token, the setting "Allow GitHub Actions to create and approve pull requests" must be on, and a pull request made
+with that token does not start your other workflows. If `main` requires checks, give `token` a personal access token or a GitHub
+App token. The [npm-auto-build documentation](https://github.com/miguelcolmenares/npm-auto-build#mode-pr) has the details.
 
 ## With docs-sitekit
 
