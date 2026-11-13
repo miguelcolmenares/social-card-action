@@ -52,9 +52,8 @@ npm-auto-build installs your dependencies and runs a script of your `package.jso
 `command`. So this needs a repository with a `package.json` and that script. The script runs after the card is drawn, and only the
 `paths` are committed, so a build of a site can read the card, and a quick script such as `typecheck` works too.
 
-npm-auto-build has no v3 release yet, so the examples pin the commit of its `main` branch by full SHA, which is also what its
-documentation advises for a workflow with a write token. After the release, replace the SHA with `@v3` or with the commit of the
-tag.
+The examples pin npm-auto-build by the full SHA of its `v3.0.0` tag, with the version in a comment, which is what its
+documentation advises for a workflow with a write token, because a tag can move. A workflow with no write token can use `@v3`.
 
 This workflow commits the card to the branch when you run it by hand, for example after you edit the description of the
 repository. Mode `commit` pushes to the branch, so use it only on a branch that accepts pushes from the workflow.
@@ -84,9 +83,8 @@ jobs:
       - uses: miguelcolmenares/social-card-action@v0.1.0
         with:
           path: site/public/social.png
-      # npm-auto-build has no v3 release yet, so this is the commit of its main branch.
-      # After the release, use the commit of the v3 tag, or @v3.
-      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+      # Pinned by full SHA because the job has a write token: the commit of the v3.0.0 tag.
+      - uses: miguelcolmenares/npm-auto-build@7efbcdc1df67ec0ab3f81d03173e3507c32aa2fe # v3.0.0
         with:
           mode: commit
           paths: site/public/social.png
@@ -122,7 +120,7 @@ jobs:
       - uses: miguelcolmenares/social-card-action@v0.1.0
         with:
           path: site/public/social.png
-      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+      - uses: miguelcolmenares/npm-auto-build@7efbcdc1df67ec0ab3f81d03173e3507c32aa2fe # v3.0.0
         with:
           mode: pr
           paths: site/public/social.png

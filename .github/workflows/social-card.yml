@@ -36,8 +36,8 @@ jobs:
           path: docs/example.png
       # npm-auto-build runs a script of package.json before it commits. This repository has no build step, so the script is
       # `typecheck`, a quick gate. `ignore-scripts` keeps husky (the `prepare` script) from touching the git config.
-      # npm-auto-build has no v3 release yet: this is the commit of its main branch.
-      - uses: miguelcolmenares/npm-auto-build@bc350eabf9a27107ab822d96f34499acaa3a0fdd # v3 pre-release (main), move to the v3 tag after the release
+      # Pinned by full SHA, because this job has a write token: the commit of the v3.0.0 tag.
+      - uses: miguelcolmenares/npm-auto-build@7efbcdc1df67ec0ab3f81d03173e3507c32aa2fe # v3.0.0
         with:
           mode: pr
           command: typecheck

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **The README commits the card with npm-auto-build.** The hand-written `git commit` step is replaced by `mode: commit`, with `mode: pr` for a protected branch, and `paths: site/public/social.png`. The repository has the same flow in `.github/workflows/social-card.yml`, run by hand, which opens a pull request when the card of the repository changed. npm-auto-build has no v3 release yet, so both pin the commit of its `main` branch.
+- **The README commits the card with npm-auto-build.** The hand-written `git commit` step is replaced by `mode: commit`, with `mode: pr` for a protected branch, and `paths: site/public/social.png`. The repository has the same flow in `.github/workflows/social-card.yml`, run by hand, which opens a pull request when the card of the repository changed. Both pin npm-auto-build by the full SHA of its `v3.0.0` tag, with the version in a comment.
 
 ### Security
 
