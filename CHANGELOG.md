@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - **`minimatch` is 11.0.5 in the development dependencies.** Versions 7.0.0 to 11.0.0 allow a denial of service through glob parts amplification (GHSA-g3hv-75wg-m249, patched in 11.0.1). An `overrides` entry in `package.json` moves the 10.x and 9.x copies that `eslint`, `glob` and the test tooling pull in to 11.0.5. It is a development dependency only, so the shipped package does not change.
+- **`fflate` is 0.7.5 or later.** Versions 0.7.0 to 0.7.4 can loop forever on a malformed ZIP64 archive in `unzipSync` (GHSA-px8p-9vwx-vf98). `satori` pins `fflate` to 0.7.3 exactly, so an `overrides` entry in `package.json` moves it to `^0.7.5`. This copy is a runtime dependency of the action, through `satori`, so the next release carries the fix.
 
 ## [0.1.0] - 2026-11-05
 
